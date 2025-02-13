@@ -17,7 +17,7 @@ func handlerFollow(s *state, cmd command, user database.User) error {
 
 	url := cmd.args[0]
 
-	feed, err := s.db.GetFeedsByUrl(context.Background(), url)
+	feed, err := s.db.GetFeedByUrl(context.Background(), url)
 	if err != nil {
 		return fmt.Errorf("failed to get feed from database: %v", err)
 	}
@@ -51,6 +51,29 @@ func handlerFollowing(s *state, cmd command, user database.User) error {
 
 	feedFollowJson, _ := json.MarshalIndent(feedFollow, "", "  ")
 	fmt.Println(string(feedFollowJson))
+
+	return nil
+}
+
+func handlerUnfollow(s *state, cmd command, user database.User) error {
+	if len(cmd.args) != 1 {
+		return fmt.Errorf("the follow command expects 1 argument ex.: gator unfollow <url>")
+	}
+
+	url := cmd.args[0]
+
+	feed, err := s.db.GetFeedByUrl(context.Background(), url)
+	if err != nil {
+		return fmt.Errorf("failed to get feed from database: %v", err)
+	}
+
+	err = s.db.DeleteFeedFollow(context.Background(), database.DeleteFeedFollowParams{
+		UserID: user.ID,
+		FeedID: feed.ID,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to get feed_follows from database: %v", err)
+	}
 
 	return nil
 }

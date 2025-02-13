@@ -11,18 +11,17 @@ import (
 )
 
 func handlerAddFeed(s *state, cmd command, user database.User) error {
-	if len(cmd.args) != 2 {
-		return fmt.Errorf("the addfeed command expects 2 arguments ex.: gator addfeed <name> <url>")
+	if len(cmd.args) != 1 {
+		return fmt.Errorf("the addfeed command expects 2 arguments ex.: gator addfeed <url>")
 	}
 
-	name := cmd.args[0]
-	url := cmd.args[1]
+	url := cmd.args[0]
 
 	feed, err := s.db.CreateFeed(context.Background(), database.CreateFeedParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
-		Name:      name,
+		Name:      user.Name,
 		Url:       url,
 		UserID:    user.ID,
 	})

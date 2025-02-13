@@ -26,7 +26,7 @@ type RSSItem struct {
 }
 
 func fetchFeed(ctx context.Context, feedUrl string) (*RSSFeed, error) {
-	request, err := http.NewRequestWithContext(context.Background(), http.MethodGet, feedUrl, http.NoBody)
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, feedUrl, http.NoBody)
 	if err != nil {
 		return &RSSFeed{}, fmt.Errorf("failed to write request: %v", err)
 	}

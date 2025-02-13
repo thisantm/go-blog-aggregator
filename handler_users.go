@@ -27,7 +27,7 @@ func handlerLogin(s *state, cmd command) error {
 		return fmt.Errorf("failed to set user in config file: %v", err)
 	}
 
-	fmt.Println("user has been set")
+	fmt.Printf("user has been set to %s\n", userName)
 
 	return nil
 }

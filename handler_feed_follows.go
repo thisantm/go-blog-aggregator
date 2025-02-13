@@ -10,17 +10,12 @@ import (
 	"github.com/thisantm/go-blog-aggregator/internal/database"
 )
 
-func handlerFollow(s *state, cmd command) error {
+func handlerFollow(s *state, cmd command, user database.User) error {
 	if len(cmd.args) != 1 {
 		return fmt.Errorf("the follow command expects 1 argument ex.: gator follow <url>")
 	}
 
 	url := cmd.args[0]
-
-	user, err := s.db.GetUser(context.Background(), s.config.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("failed to get user from database: %v", err)
-	}
 
 	feed, err := s.db.GetFeedsByUrl(context.Background(), url)
 	if err != nil {
@@ -44,14 +39,9 @@ func handlerFollow(s *state, cmd command) error {
 	return nil
 }
 
-func handlerFollowing(s *state, cmd command) error {
+func handlerFollowing(s *state, cmd command, user database.User) error {
 	if len(cmd.args) != 0 {
 		return fmt.Errorf("the follow command expects 0 argument ex.: gator following")
-	}
-
-	user, err := s.db.GetUser(context.Background(), s.config.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("failed to get user from database: %v", err)
 	}
 
 	feedFollow, err := s.db.GetFeedFollowsForUser(context.Background(), user.ID)
